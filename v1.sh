@@ -211,104 +211,40 @@ endipresult() {
 	freeCloudflareAccount2
 
 	template='{
-	"route": {
-		"geoip": {
-		"path": "geo-assets\\sagernet-sing-geoip-geoip.db"
-		},
-		"geosite": {
-		"path": "geo-assets\\sagernet-sing-geosite-geosite.db"
-		},
-		"rules": [
-		{
-			"inbound": "dns-in",
-			"outbound": "dns-out"
-		},
-		{
-			"port": 53,
-			"outbound": "dns-out"
-		},
-		{
-			"clash_mode": "Direct",
-			"outbound": "direct"
-		},
-		{
-			"clash_mode": "Global",
-			"outbound": "select"
-		}
-		],
-		"auto_detect_interface": true,
-		"override_android_vpn": true
-	},
-	"outbounds": [
-		{
-		"type": "selector",
-		"tag": "select",
-		"outbounds": [
-			"auto",
-			"IP->Iran, Yotube:Geekmeek",
-			"IP->Main, Yotube:Geekmeek"
-		],
-		"default": "auto"
-		},
-		{
-		"type": "urltest",
-		"tag": "auto",
-		"outbounds": [
-			"IP->Iran, Yotube:Geekmeek",
-			"IP->Main, Yotube:Geekmeek"
-		],
-		"url": "http://cp.cloudflare.com/",
-		"interval": "10m0s"
-		},
-		{
-		"type": "wireguard",
-		"tag": "IP->Iran, Yotube:Geekmeek",
-		"local_address": [
-			"172.16.0.2/32",
-			"'$publicKey'"
-		],
-		"private_key": "'$privateKey'",
-		"server": "'$Endip_v4_ip'",
-		"server_port": '$Endip_v4_port',
-		"peer_public_key": "bmXOC+F1FxEMF9dyiK2H5/1SUtzH0JuVo51h2wPfgyo=",
-		"reserved": '$reserved',
-		"mtu": 1280,
-		"fake_packets": "5-10"
-		},
-		{
-		"type": "wireguard",
-		"tag": "IP->Main, Yotube:Geekmeek",
-		"detour": "IP->Iran, Yotube:Geekmeek",
-		"local_address": [
-			"172.16.0.2/32",
-			"'$publicKey2'"
-		],
-		"private_key": "'$privateKey2'",
-		"server": "'$Endip_v4_ip'",
-		"server_port": '$Endip_v4_port',
-		"peer_public_key": "bmXOC+F1FxEMF9dyiK2H5/1SUtzH0JuVo51h2wPfgyo=",
-		"reserved": '$reserved2',
-		"mtu": 1280,
-		"fake_packets": "5-10"
-		},
-		{
-		"type": "dns",
-		"tag": "dns-out"
-		},
-		{
-		"type": "direct",
-		"tag": "direct"
-		},
-		{
-		"type": "direct",
-		"tag": "bypass"
-		},
-		{
-		"type": "block",
-		"tag": "block"
-		}
-	]  
-	}'
+        "outbounds": [
+                {
+                        "type": "wireguard",
+                        "tag": "Warp-IR",
+                        "server": "'$Endip_v4_ip'",
+                        "server_port": '$Endip_v4_port',
+                        "local_address": [
+                                "172.16.0.2/32",
+                                "'$publicKey'"
+                        ],
+                        "private_key": "'$privateKey'",
+                        "peer_public_key": "bmXOC+F1FxEMF9dyiK2H5/1SUtzH0JuVo51h2wPfgyo=",
+                        "reserved": '$reserved',
+                        "mtu": 1280,
+                        "fake_packets": "5-10"
+                },
+                {
+                        "type": "wireguard",
+                        "tag": "Warp-EU",
+                        "detour": "Warp-IR",
+                        "server": "'$Endip_v4_ip'",
+                        "server_port": '$Endip_v4_port',
+                        "local_address": [
+                                "172.16.0.2/32",
+                                "'$publicKey2'"
+                        ],
+                        "private_key": "'$privateKey2'",
+                        "peer_public_key": "bmXOC+F1FxEMF9dyiK2H5/1SUtzH0JuVo51h2wPfgyo=",
+                        "reserved": '$reserved2',
+                        "mtu": 1280,
+                        "fake_packets": "5-10"
+                }
+        ]
+}'
 
 	echo "$template"
 

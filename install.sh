@@ -8,4 +8,4 @@ pip install random httpx os time requests
 # pip install requests
 
 # اجرای کد پایتون
-python main.py
+python3 main.py

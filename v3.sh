@@ -213,7 +213,12 @@ endipresult() {
 	freeCloudflareAccount2
 
 
-template='#profile-title: base64:VFZDIHwgV0FSUCA=#profile-update-interval: 1#subscription-userinfo: upload=0; download=0; total=10737418240000000; expire=2546249531#support-url: https: //t.me/v2raycollector#profile-web-page-url: https: //github.com/yebekhe/TelegramV2rayCollector
+template='
+#profile-title: base64:VFZDIHwgV0FSUCA=
+#profile-update-interval: 1
+#subscription-userinfo: upload=0; download=0; total=10737418240000000; expire=2546249531
+#support-url: https: //t.me/v2raycollector
+#profile-web-page-url: https: //github.com/yebekhe/TelegramV2rayCollector
 {
 "log": {
 "disabled": false,

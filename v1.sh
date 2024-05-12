@@ -11,18 +11,6 @@ white='\033[0;37m'
 rest='\033[0m'
 
 
-
-# Check if termux-api is installed
-if ! command -v termux-clipboard-set &> /dev/null
-then
-    echo "termux-api could not be found, installing now..."
-    pkg install termux-api
-fi
-
-
-
-
-
 case "$(uname -m)" in
 	x86_64 | x64 | amd64 )
 	    cpu=amd64
@@ -229,11 +217,9 @@ template='{"outbounds":[{"type":"wireguard","tag":"Warp-IR","server":"'$Endip_v4
 
 
 '
-
 	# echo "$template"
  	# Print the template in green
-  	# echo -e "${green}$template${rest}"
-   	echo -e "${green}$template${rest}" | termux-clipboard-set
+  	echo -e "${green}$template${rest}"
 
 
     rm warpendpoint >/dev/null 2>&1

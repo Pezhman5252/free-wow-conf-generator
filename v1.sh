@@ -203,7 +203,7 @@ endipresult() {
     fi
     
     clear
-    echo "در حال ساخت کانکشن"
+
     Endip_v4=$(cat result.csv | grep -oE "[0-9]+\.[0-9]+\.[0-9]+\.[0-9]+:[0-9]+" | head -n 1)
 	Endip_v4_ip="${Endip_v4%:*}"
 	Endip_v4_port="${Endip_v4##*:}"
@@ -211,7 +211,11 @@ endipresult() {
 	freeCloudflareAccount
 	freeCloudflareAccount2
 
-template='{"outbounds":[{"type":"wireguard","tag":"Warp-IR","server":"'$Endip_v4_ip'","server_port":'$Endip_v4_port',"local_address":["172.16.0.2/32","'$publicKey'"],"private_key":"'$privateKey'","peer_public_key":"bmXOC+F1FxEMF9dyiK2H5/1SUtzH0JuVo51h2wPfgyo=","reserved":'$reserved',"mtu":1280,"fake_packets":"5-10"},{"type":"wireguard","tag":"Warp-EU","detour":"Warp-IR","server":"'$Endip_v4_ip'","server_port":'$Endip_v4_port',"local_address":["172.16.0.2/32","'$publicKey2'"],"private_key":"'$privateKey2'","peer_public_key":"bmXOC+F1FxEMF9dyiK2H5/1SUtzH0JuVo51h2wPfgyo=","reserved":'$reserved2',"mtu":1280,"fake_packets":"5-10"}]}'
+template='{"outbounds":[{"type":"wireguard","tag":"Warp-IR","server":"'$Endip_v4_ip'","server_port":'$Endip_v4_port',"local_address":["172.16.0.2/32","'$publicKey'"],"private_key":"'$privateKey'","peer_public_key":"bmXOC+F1FxEMF9dyiK2H5/1SUtzH0JuVo51h2wPfgyo=","reserved":'$reserved',"mtu":1280,"fake_packets":"5-10"},{"type":"wireguard","tag":"Warp-EU","detour":"Warp-IR","server":"'$Endip_v4_ip'","server_port":'$Endip_v4_port',"local_address":["172.16.0.2/32","'$publicKey2'"],"private_key":"'$privateKey2'","peer_public_key":"bmXOC+F1FxEMF9dyiK2H5/1SUtzH0JuVo51h2wPfgyo=","reserved":'$reserved2',"mtu":1280,"fake_packets":"5-10"}]}
+
+
+
+'
 
 	# echo "$template"
  	# Print the template in green

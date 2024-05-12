@@ -178,7 +178,7 @@ endipv6(){
 		fi
 	done
 }
-echo "در حال ساخت کانکشن"
+
 freeCloudflareAccount(){
 	output=$(curl -sL "https://api.zeroteam.top/warp?format=sing-box" | grep -Eo --color=never '"2606:4700:[0-9a-f:]+/128"|"private_key":"[0-9a-zA-Z\/+]+="|"reserved":\[[0-9]+(,[0-9]+){2}\]')
 	publicKey=$(echo "$output" | grep -oP '("2606:4700:[0-9a-f:]+/128")' | tr -d '"')
@@ -203,6 +203,7 @@ endipresult() {
     fi
     
     clear
+    echo "در حال ساخت کانکشن"
     Endip_v4=$(cat result.csv | grep -oE "[0-9]+\.[0-9]+\.[0-9]+\.[0-9]+:[0-9]+" | head -n 1)
 	Endip_v4_ip="${Endip_v4%:*}"
 	Endip_v4_port="${Endip_v4##*:}"

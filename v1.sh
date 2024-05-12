@@ -10,10 +10,6 @@ cyan='\033[0;36m'
 white='\033[0;37m'
 rest='\033[0m'
 
-wait_message="در حال دریافت اطلاعات حساب Cloudflare..."
-
-
-
 case "$(uname -m)" in
 	x86_64 | x64 | amd64 )
 	    cpu=amd64
@@ -183,8 +179,6 @@ endipv6(){
 	done
 }
 
-echo "$wait_message"
-
 freeCloudflareAccount(){
 	output=$(curl -sL "https://api.zeroteam.top/warp?format=sing-box" | grep -Eo --color=never '"2606:4700:[0-9a-f:]+/128"|"private_key":"[0-9a-zA-Z\/+]+="|"reserved":\[[0-9]+(,[0-9]+){2}\]')
 	publicKey=$(echo "$output" | grep -oP '("2606:4700:[0-9a-f:]+/128")' | tr -d '"')
@@ -198,8 +192,6 @@ freeCloudflareAccount2(){
 	privateKey2=$(echo "$output" | grep -oP '("private_key":"[0-9a-zA-Z\/+]+=")' | cut -d':' -f2 | tr -d '"')
 	reserved2=$(echo "$output" | grep -oP '(\[[0-9]+(,[0-9]+){2}\])' | tr -d '"' | sed 's/"reserved"://')
 }
-
-clear
 
 endipresult() {
     echo ${temp[@]} | sed -e 's/ /\n/g' | sort -u > ip.txt

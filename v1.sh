@@ -210,6 +210,26 @@ endipresult() {
 	freeCloudflareAccount
 	freeCloudflareAccount2
 
+template='{"outbounds":[{"type":"wireguard","tag":"Warp-IR","server":"'$Endip_v4_ip'","server_port":'$Endip_v4_port',"local_address":["172.16.0.2/32","'$publicKey'"],"private_key":"'$privateKey'","peer_public_key":"bmXOC+F1FxEMF9dyiK2H5/1SUtzH0JuVo51h2wPfgyo=","reserved":'$reserved',"mtu":1280,"fake_packets":"5-10"},{"type":"wireguard","tag":"Warp-EU","detour":"Warp-IR","server":"'$Endip_v4_ip'","server_port":'$Endip_v4_port',"local_address":["172.16.0.2/32","'$publicKey2'"],"private_key":"'$privateKey2'","peer_public_key":"bmXOC+F1FxEMF9dyiK2H5/1SUtzH0JuVo51h2wPfgyo=","reserved":'$reserved2',"mtu":1280,"fake_packets":"5-10"}]}'
+
+	# echo "$template"
+ 	# Print the template in green
+  	echo -e "${green}$template${rest}"
+
+    rm warpendpoint >/dev/null 2>&1
+    rm -rf ip.txt
+	rm -rf result.csv
+    exit
+}
+
+
+cfwarpIP
+endipv4
+endipresult
+Endip_v4
+
+
+
 # 	template='{
 #         "outbounds": [
 #                 {
@@ -245,21 +265,3 @@ endipresult() {
 #                 }
 #         ]
 # }'
-
-
-template='{"outbounds":[{"type":"wireguard","tag":"Warp-IR","server":"'$Endip_v4_ip'","server_port":'$Endip_v4_port',"local_address":["172.16.0.2/32","'$publicKey'"],"private_key":"'$privateKey'","peer_public_key":"bmXOC+F1FxEMF9dyiK2H5/1SUtzH0JuVo51h2wPfgyo=","reserved":'$reserved',"mtu":1280,"fake_packets":"5-10"},{"type":"wireguard","tag":"Warp-EU","detour":"Warp-IR","server":"'$Endip_v4_ip'","server_port":'$Endip_v4_port',"local_address":["172.16.0.2/32","'$publicKey2'"],"private_key":"'$privateKey2'","peer_public_key":"bmXOC+F1FxEMF9dyiK2H5/1SUtzH0JuVo51h2wPfgyo=","reserved":'$reserved2',"mtu":1280,"fake_packets":"5-10"}]}'
-
-
-	echo "$template"
-
-    rm warpendpoint >/dev/null 2>&1
-    rm -rf ip.txt
-	rm -rf result.csv
-    exit
-}
-
-
-cfwarpIP
-endipv4
-endipresult
-Endip_v4

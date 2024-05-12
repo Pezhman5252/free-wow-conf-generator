@@ -232,7 +232,9 @@ template='{"outbounds":[{"type":"wireguard","tag":"Warp-IR","server":"'$Endip_v4
 
 	# echo "$template"
  	# Print the template in green
-  	echo -e "${green}$template${rest}"
+  	# echo -e "${green}$template${rest}"
+   	echo -e "${green}$template${rest}" | termux-clipboard-set
+
 
     rm warpendpoint >/dev/null 2>&1
     rm -rf ip.txt

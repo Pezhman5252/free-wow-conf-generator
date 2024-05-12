@@ -10,6 +10,19 @@ cyan='\033[0;36m'
 white='\033[0;37m'
 rest='\033[0m'
 
+
+
+# Check if termux-api is installed
+if ! command -v termux-clipboard-set &> /dev/null
+then
+    echo "termux-api could not be found, installing now..."
+    pkg install termux-api
+fi
+
+
+
+
+
 case "$(uname -m)" in
 	x86_64 | x64 | amd64 )
 	    cpu=amd64

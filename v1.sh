@@ -180,21 +180,23 @@ endipv6(){
 }
 
 freeCloudflareAccount(){
-	echo -e "${yellow}در حال اجرای عملیات freeCloudflareAccount، لطفا صبر کنید...${rest}"
+	
 	output=$(curl -sL "https://api.zeroteam.top/warp?format=sing-box" | grep -Eo --color=never '"2606:4700:[0-9a-f:]+/128"|"private_key":"[0-9a-zA-Z\/+]+="|"reserved":\[[0-9]+(,[0-9]+){2}\]')
 	publicKey=$(echo "$output" | grep -oP '("2606:4700:[0-9a-f:]+/128")' | tr -d '"')
 	privateKey=$(echo "$output" | grep -oP '("private_key":"[0-9a-zA-Z\/+]+=")' | cut -d':' -f2 | tr -d '"')
 	reserved=$(echo "$output" | grep -oP '(\[[0-9]+(,[0-9]+){2}\])' | tr -d '"' | sed 's/"reserved"://')
+ 	echo -e "${yellow}50%${rest}"
 }
-clear
+
 freeCloudflareAccount2(){
-	echo -e "${yellow}در حال اجرای عملیات freeCloudflareAccount، لطفا صبر کنید...${rest}"
+	
 	output=$(curl -sL "https://api.zeroteam.top/warp?format=sing-box" | grep -Eo --color=never '"2606:4700:[0-9a-f:]+/128"|"private_key":"[0-9a-zA-Z\/+]+="|"reserved":\[[0-9]+(,[0-9]+){2}\]')
 	publicKey2=$(echo "$output" | grep -oP '("2606:4700:[0-9a-f:]+/128")' | tr -d '"')
 	privateKey2=$(echo "$output" | grep -oP '("private_key":"[0-9a-zA-Z\/+]+=")' | cut -d':' -f2 | tr -d '"')
 	reserved2=$(echo "$output" | grep -oP '(\[[0-9]+(,[0-9]+){2}\])' | tr -d '"' | sed 's/"reserved"://')
+ 	echo -e "${yellow}100%${rest}"
 }
-clear
+
 endipresult() {
     echo ${temp[@]} | sed -e 's/ /\n/g' | sort -u > ip.txt
     ulimit -n 102400

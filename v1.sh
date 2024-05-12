@@ -10,6 +10,7 @@ cyan='\033[0;36m'
 white='\033[0;37m'
 rest='\033[0m'
 
+pkg install qrencode
 
 case "$(uname -m)" in
 	x86_64 | x64 | amd64 )
@@ -219,7 +220,8 @@ template='{"outbounds":[{"type":"wireguard","tag":"Warp-IR","server":"'$Endip_v4
 '
 	# echo "$template"
  	# Print the template in green
-  	echo -e "${green}$template${rest}"
+  	# echo -e "${green}$template${rest}"
+	echo -e "${green}$template${rest}" | qrencode -t UTF8
 
 
     rm warpendpoint >/dev/null 2>&1

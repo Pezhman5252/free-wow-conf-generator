@@ -221,6 +221,7 @@ template='{"outbounds":[{"type":"wireguard","tag":"Warp-IR","server":"'$Endip_v4
 
 
 '
+	clear
 	# echo "$template"
  	# Print the template in green
   	echo -e "${green}$template${rest}"

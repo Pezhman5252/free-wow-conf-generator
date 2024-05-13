@@ -196,7 +196,7 @@ endipresult() {
 	Endip_v4_port="${Endip_v4##*:}"
 
 # template='{"dddddddd": "'$Endip_v4_ip'"}'
-template="https://api.yebekhe.link/warp/?key=8fj69Qg7-76R2T0gq-107atTk9&device_name=WARP+&singbox=true&ip$Endip_v4_ip=&port=8886"
+template="https://api.yebekhe.link/warp?key=8fj69Qg7-76R2T0gq-107atTk9&device_name=WARP+&singbox=true&ip=$Endip_v4_ip&port=$Endip_v4_port"
 
 
 

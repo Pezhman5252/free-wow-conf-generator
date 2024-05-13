@@ -179,20 +179,6 @@ endipv6(){
 	done
 }
 
-freeCloudflareAccount(){
-	output=$(curl -sL "https://api.zeroteam.top/warp?format=sing-box" | grep -Eo --color=never '"2606:4700:[0-9a-f:]+/128"|"private_key":"[0-9a-zA-Z\/+]+="|"reserved":\[[0-9]+(,[0-9]+){2}\]')
-	publicKey=$(echo "$output" | grep -oP '("2606:4700:[0-9a-f:]+/128")' | tr -d '"')
-	privateKey=$(echo "$output" | grep -oP '("private_key":"[0-9a-zA-Z\/+]+=")' | cut -d':' -f2 | tr -d '"')
-	reserved=$(echo "$output" | grep -oP '(\[[0-9]+(,[0-9]+){2}\])' | tr -d '"' | sed 's/"reserved"://')
-}
-
-freeCloudflareAccount2(){
-	output=$(curl -sL "https://api.zeroteam.top/warp?format=sing-box" | grep -Eo --color=never '"2606:4700:[0-9a-f:]+/128"|"private_key":"[0-9a-zA-Z\/+]+="|"reserved":\[[0-9]+(,[0-9]+){2}\]')
-	publicKey2=$(echo "$output" | grep -oP '("2606:4700:[0-9a-f:]+/128")' | tr -d '"')
-	privateKey2=$(echo "$output" | grep -oP '("private_key":"[0-9a-zA-Z\/+]+=")' | cut -d':' -f2 | tr -d '"')
-	reserved2=$(echo "$output" | grep -oP '(\[[0-9]+(,[0-9]+){2}\])' | tr -d '"' | sed 's/"reserved"://')
-}
-
 endipresult() {
     echo ${temp[@]} | sed -e 's/ /\n/g' | sort -u > ip.txt
     ulimit -n 102400
@@ -208,9 +194,6 @@ endipresult() {
     Endip_v4=$(cat result.csv | grep -oE "[0-9]+\.[0-9]+\.[0-9]+\.[0-9]+:[0-9]+" | head -n 1)
 	Endip_v4_ip="${Endip_v4%:*}"
 	Endip_v4_port="${Endip_v4##*:}"
-    
-	freeCloudflareAccount
-	freeCloudflareAccount2
 
 template='{"server": "'$Endip_v4_ip'"}'
 	# echo "$template"

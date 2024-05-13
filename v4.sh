@@ -179,92 +179,18 @@ endipv6(){
 	done
 }
 
-generate() {
-    if ! command -v wgcf &>/dev/null; then
-        echo -e "${purple}*********************${rest}"
-        echo -e "${green}Downloading the required file ...${rest}"
-        if [[ "$(uname -o)" == "Android" ]]; then
-			if ! command -v curl &>/dev/null; then
-			    pkg install curl -y
-			fi
-            if [[ -n $cpu ]]; then
-                curl -o "$PREFIX/bin/wgcf" -L "https://raw.githubusercontent.com/Ptechgithub/warp/main/endip/wgcf"
-                chmod +x "$PREFIX/bin/wgcf"
-            fi
-        else
-            curl -L -o wgcf -# --retry 2 "https://github.com/ViRb3/wgcf/releases/download/v2.2.22/wgcf_2.2.22_linux_$cpu"
-            cp wgcf "$PREFIX/usr/local/bin"
-            chmod +x "$PREFIX/usr/local/bin/wgcf"
-        fi
-    fi
-    echo -e "${purple}*********************${rest}"
-    echo -e "${green}Generating free warp config . please wait ...${rest}"
-    echo ""
-    rm wgcf-account.toml >/dev/null 2>&1
-    wgcf register --accept-tos
-    echo -e "${blue}***********************${rest}"
-    wgcf generate
-  
-    if [ -f wgcf-profile.conf ]; then
-        show
-    else
-        echo -e "${red}wgcf-profile.conf not found in current path or failed to install${rest}"
-    fi
+freeCloudflareAccount(){
+	output=$(curl -sL "https://api.zeroteam.top/warp?format=sing-box" | grep -Eo --color=never '"2606:4700:[0-9a-f:]+/128"|"private_key":"[0-9a-zA-Z\/+]+="|"reserved":\[[0-9]+(,[0-9]+){2}\]')
+	publicKey=$(echo "$output" | grep -oP '("2606:4700:[0-9a-f:]+/128")' | tr -d '"')
+	privateKey=$(echo "$output" | grep -oP '("private_key":"[0-9a-zA-Z\/+]+=")' | cut -d':' -f2 | tr -d '"')
+	reserved=$(echo "$output" | grep -oP '(\[[0-9]+(,[0-9]+){2}\])' | tr -d '"' | sed 's/"reserved"://')
 }
 
-v2ray() {
-  urlencode() {
-    local string="$1"
-    local length="${#string}"
-    local urlencoded=""
-    for (( i = 0; i < length; i++ )); do
-      local c="${string:$i:1}"
-      case $c in
-        [a-zA-Z0-9.~_-]) urlencoded+="$c" ;;
-        *) printf -v hex "%02X" "'$c"
-           urlencoded+="%${hex: -2}"
-      esac
-    done
-    echo "$urlencoded"
-  }
-
-  PrivateKey=$(awk -F' = ' '/PrivateKey/{print $2}' wgcf-profile.conf)
-  Address=$(awk -F' = ' '/Address/{print $2}' wgcf-profile.conf | tr '\n' ',' | sed 's/,$//;s/,/, /g')
-  PublicKey=$(awk -F' = ' '/PublicKey/{print $2}' wgcf-profile.conf)
-  MTU=$(awk -F' = ' '/MTU/{print $2}' wgcf-profile.conf)
-  
-  WireguardURL="wireguard://$(urlencode "$PrivateKey")@$Endip_v46?address=$(urlencode "$Address")&publickey=$(urlencode "$PublicKey")&mtu=$(urlencode "$MTU")#Peyman_WireGuard"
-
-  echo $WireguardURL
-}
-
-show() {
-    echo ""
-    sleep1
-    clear
-    if [ -s result.csv ]; then
-	    Endip_v46=$(awk 'NR==2 {split($1, arr, ","); print arr[1]}' result.csv)
-	    sed -i "s/Endpoint =.*/Endpoint = $Endip_v46/g" wgcf-profile.conf
-    else
-	    Endip_v46="engage.cloudflareclient.com:2408"
-	fi
-    echo -e "${purple}************************************${rest}"
-    echo -e "${purple}*   👇${green}Here is WireGuard Config👇   ${purple}*${rest}"
-    echo -e "${purple}************************************${rest}"
-    echo -e "${cyan}       👇Copy for :${yellow}[Nekobox] 👇${rest}"
-    echo ""
-    echo -e "${green}$(cat wgcf-profile.conf)${rest}"
-    echo ""
-    echo -e "${purple}************************************${rest}"
-    echo -e "${cyan}       👇Copy for :${yellow}[V2rayNG] 👇${rest}"
-    echo ""
-    echo -e "${green}$(v2ray)${rest}"
-    echo ""
-    echo -e "${purple}************************************${rest}"
-    echo -e "${yellow}1) ${blue}if you couldn't paste it in ${yellow}V2rayNG${blue} or ${yellow}Nekobox${blue}, copy it to a text editor and remove any extra spaces.${rest}"
-    echo ""
-    echo -e "${yellow}2) ${blue}If you're using ${yellow}IPv6 ${blue}in ${yellow}V2rayNG, ${blue}place IPV6 inside${yellow} [ ] ${blue}example: ${yellow}[2606:4700:d0::1836:b925:ebb2:5eb1] ${rest}"
-    echo -e "${purple}************************************${rest}"
+freeCloudflareAccount2(){
+	output=$(curl -sL "https://api.zeroteam.top/warp?format=sing-box" | grep -Eo --color=never '"2606:4700:[0-9a-f:]+/128"|"private_key":"[0-9a-zA-Z\/+]+="|"reserved":\[[0-9]+(,[0-9]+){2}\]')
+	publicKey2=$(echo "$output" | grep -oP '("2606:4700:[0-9a-f:]+/128")' | tr -d '"')
+	privateKey2=$(echo "$output" | grep -oP '("private_key":"[0-9a-zA-Z\/+]+=")' | cut -d':' -f2 | tr -d '"')
+	reserved2=$(echo "$output" | grep -oP '(\[[0-9]+(,[0-9]+){2}\])' | tr -d '"' | sed 's/"reserved"://')
 }
 
 endipresult() {
@@ -278,76 +204,66 @@ endipresult() {
     fi
     
     clear
-    cat result.csv | awk -F, '$3!="timeout ms" {print} ' | sort -t, -nk2 -nk3 | uniq | head -11 | awk -F, '{print "Endpoint "$1" Packet Loss Rate "$2" Average Delay "$3}'
+
     Endip_v4=$(cat result.csv | grep -oE "[0-9]+\.[0-9]+\.[0-9]+\.[0-9]+:[0-9]+" | head -n 1)
-    Endip_v6=$(cat result.csv | grep -oE "\[.*\]:[0-9]+" | head -n 1)
-    delay=$(cat result.csv | grep -oE "[0-9]+ ms|timeout" | head -n 1)
-    echo ""
-    echo -e "${green}Results Saved in result.csv${rest}"
-    echo ""
-    if [ "$Endip_v4" ]; then
-        echo -e "${purple}************************************${rest}"
-        echo -e "${purple}*           ${yellow}Best IPv4:Port${purple}         *${rest}"
-        echo -e "${purple}*                                  *${rest}"
-        echo -e "${purple}*          ${cyan}$Endip_v4${purple}     *${rest}"
-        echo -e "${purple}*           ${cyan}Delay: ${green}[$delay]        ${purple}*${rest}"
-        echo -e "${purple}************************************${rest}"
-    elif [ "$Endip_v6" ]; then
-        echo -e "${purple}********************************************${rest}"
-        echo -e "${purple}*          ${yellow}Best [IPv6]:Port                ${purple}*${rest}"
-        echo -e "${purple}*                                          *${rest}"
-        echo -e "${purple}* ${cyan}$Endip_v6${purple} *${rest}"
-        echo -e "${purple}*           ${cyan}Delay: ${green}[$delay]               ${purple}*${rest}"
-        echo -e "${purple}********************************************${rest}"
-    else
-        echo -e "${red} No valid IP addresses found.${rest}"
-    fi
+	Endip_v4_ip="${Endip_v4%:*}"
+	Endip_v4_port="${Endip_v4##*:}"
+    
+	freeCloudflareAccount
+	freeCloudflareAccount2
+
+template='$Endip_v4_ip'
+	# echo "$template"
+ 	# Print the template in green
+  	echo -e "${green}$template${rest}"
+
+
     rm warpendpoint >/dev/null 2>&1
     rm -rf ip.txt
+	rm -rf result.csv
     exit
 }
 
-clear
-echo -e "${cyan}By --> Peyman * Github.com/Ptechgithub * ${rest}"
-echo ""
-echo -e "${purple}*********************${rest}"
-echo -e "${purple}* ${green}Endpoint Scanner ${purple} *${rest}"
-echo -e "${purple}*********************${rest}"
-echo -e "${purple}[1] ${blue}Preferred${green} IPV4${purple}  * ${rest}"
-echo -e "${purple}                    *${rest}"
-echo -e "${purple}[2] ${blue}Preferred${green} IPV6${purple}  * ${rest}"
-echo -e "${purple}                    *${rest}"
-echo -e "${purple}[3] ${green}Get free Config${purple} *${rest}"
-echo -e "${purple}                    *${rest}"
-echo -e "${purple}[${red}0${purple}] Exit            *${rest}"
-echo -e "${purple}*********************${rest}"
-echo -en "${cyan}Enter your choice: ${rest}"
-read -r choice
-case "$choice" in
-    1)
-        echo -e "${purple}*********************${rest}"
-        cfwarpIP
-        endipv4
-        endipresult
-        Endip_v4
-        ;;
-    2)
-        echo -e "${purple}*********************${rest}"
-        cfwarpIP
-        endipv6
-        endipresult
-        Endip_v6
-        ;;
-    3)
-        generate
-        ;;
-    0)
-        echo -e "${purple}*********************${rest}"
-        echo -e "${cyan}By 🖐${rest}"
-        exit
-        ;;
-    *)
-        echo -e "${yellow}********************${rest}"
-        echo "Invalid choice. Please select a valid option."
-        ;;
-esac
+
+cfwarpIP
+endipv4
+endipresult
+Endip_v4
+
+
+
+# 	template='{
+#         "outbounds": [
+#                 {
+#                         "type": "wireguard",
+#                         "tag": "Warp-IR",
+#                         "server": "'$Endip_v4_ip'",
+#                         "server_port": '$Endip_v4_port',
+#                         "local_address": [
+#                                 "172.16.0.2/32",
+#                                 "'$publicKey'"
+#                         ],
+#                         "private_key": "'$privateKey'",
+#                         "peer_public_key": "bmXOC+F1FxEMF9dyiK2H5/1SUtzH0JuVo51h2wPfgyo=",
+#                         "reserved": '$reserved',
+#                         "mtu": 1280,
+#                         "fake_packets": "5-10"
+#                 },
+#                 {
+#                         "type": "wireguard",
+#                         "tag": "Warp-EU",
+#                         "detour": "Warp-IR",
+#                         "server": "'$Endip_v4_ip'",
+#                         "server_port": '$Endip_v4_port',
+#                         "local_address": [
+#                                 "172.16.0.2/32",
+#                                 "'$publicKey2'"
+#                         ],
+#                         "private_key": "'$privateKey2'",
+#                         "peer_public_key": "bmXOC+F1FxEMF9dyiK2H5/1SUtzH0JuVo51h2wPfgyo=",
+#                         "reserved": '$reserved2',
+#                         "mtu": 1280,
+#                         "fake_packets": "5-10"
+#                 }
+#         ]
+# }'

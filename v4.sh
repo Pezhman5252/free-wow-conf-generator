@@ -197,7 +197,7 @@ endipresult() {
 	Endip_v4_port="${Endip_v4##*:}"
 
 
-template='$Endip_v4_ip'
+template="'$Endip_v4_ip'"
 
 	# echo "$template"
  	# Print the template in green

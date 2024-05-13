@@ -142,6 +142,61 @@ endipv4(){
 	done
 }
 
+endipv6(){
+	n=0
+	iplist=100
+	while true
+	do
+		temp[$n]=$(echo [2606:4700:d0::$(printf '%x\n' $(($RANDOM*2+$RANDOM%2))):$(printf '%x\n' $(($RANDOM*2+$RANDOM%2))):$(printf '%x\n' $(($RANDOM*2+$RANDOM%2))):$(printf '%x\n' $(($RANDOM*2+$RANDOM%2)))])
+		n=$[$n+1]
+		if [ $n -ge $iplist ]
+		then
+			break
+		fi
+		temp[$n]=$(echo [2606:4700:d1::$(printf '%x\n' $(($RANDOM*2+$RANDOM%2))):$(printf '%x\n' $(($RANDOM*2+$RANDOM%2))):$(printf '%x\n' $(($RANDOM*2+$RANDOM%2))):$(printf '%x\n' $(($RANDOM*2+$RANDOM%2)))])
+		n=$[$n+1]
+		if [ $n -ge $iplist ]
+		then
+			break
+		fi
+	done
+	while true
+	do
+		if [ $(echo ${temp[@]} | sed -e 's/ /\n/g' | sort -u | wc -l) -ge $iplist ]
+		then
+			break
+		else
+			temp[$n]=$(echo [2606:4700:d0::$(printf '%x\n' $(($RANDOM*2+$RANDOM%2))):$(printf '%x\n' $(($RANDOM*2+$RANDOM%2))):$(printf '%x\n' $(($RANDOM*2+$RANDOM%2))):$(printf '%x\n' $(($RANDOM*2+$RANDOM%2)))])
+			n=$[$n+1]
+		fi
+		if [ $(echo ${temp[@]} | sed -e 's/ /\n/g' | sort -u | wc -l) -ge $iplist ]
+		then
+			break
+		else
+			temp[$n]=$(echo [2606:4700:d1::$(printf '%x\n' $(($RANDOM*2+$RANDOM%2))):$(printf '%x\n' $(($RANDOM*2+$RANDOM%2))):$(printf '%x\n' $(($RANDOM*2+$RANDOM%2))):$(printf '%x\n' $(($RANDOM*2+$RANDOM%2)))])
+			n=$[$n+1]
+		fi
+	done
+}
+
+
+endipresult() {
+    echo ${temp[@]} | sed -e 's/ /\n/g' | sort -u > ip.txt
+    ulimit -n 102400
+    chmod +x warpendpoint >/dev/null 2>&1
+    if command -v warpendpoint &>/dev/null; then
+        warpendpoint
+   else
+        ./warpendpoint
+    fi
+    
+    clear
+
+    Endip_v4=$(cat result.csv | grep -oE "[0-9]+\.[0-9]+\.[0-9]+\.[0-9]+:[0-9]+" | head -n 1)
+	Endip_v4_ip="${Endip_v4%:*}"
+	Endip_v4_port="${Endip_v4##*:}"
+
+
 template='$Endip_v4_ip'
 
 	# echo "$template"

@@ -142,81 +142,8 @@ endipv4(){
 	done
 }
 
-endipv6(){
-	n=0
-	iplist=100
-	while true
-	do
-		temp[$n]=$(echo [2606:4700:d0::$(printf '%x\n' $(($RANDOM*2+$RANDOM%2))):$(printf '%x\n' $(($RANDOM*2+$RANDOM%2))):$(printf '%x\n' $(($RANDOM*2+$RANDOM%2))):$(printf '%x\n' $(($RANDOM*2+$RANDOM%2)))])
-		n=$[$n+1]
-		if [ $n -ge $iplist ]
-		then
-			break
-		fi
-		temp[$n]=$(echo [2606:4700:d1::$(printf '%x\n' $(($RANDOM*2+$RANDOM%2))):$(printf '%x\n' $(($RANDOM*2+$RANDOM%2))):$(printf '%x\n' $(($RANDOM*2+$RANDOM%2))):$(printf '%x\n' $(($RANDOM*2+$RANDOM%2)))])
-		n=$[$n+1]
-		if [ $n -ge $iplist ]
-		then
-			break
-		fi
-	done
-	while true
-	do
-		if [ $(echo ${temp[@]} | sed -e 's/ /\n/g' | sort -u | wc -l) -ge $iplist ]
-		then
-			break
-		else
-			temp[$n]=$(echo [2606:4700:d0::$(printf '%x\n' $(($RANDOM*2+$RANDOM%2))):$(printf '%x\n' $(($RANDOM*2+$RANDOM%2))):$(printf '%x\n' $(($RANDOM*2+$RANDOM%2))):$(printf '%x\n' $(($RANDOM*2+$RANDOM%2)))])
-			n=$[$n+1]
-		fi
-		if [ $(echo ${temp[@]} | sed -e 's/ /\n/g' | sort -u | wc -l) -ge $iplist ]
-		then
-			break
-		else
-			temp[$n]=$(echo [2606:4700:d1::$(printf '%x\n' $(($RANDOM*2+$RANDOM%2))):$(printf '%x\n' $(($RANDOM*2+$RANDOM%2))):$(printf '%x\n' $(($RANDOM*2+$RANDOM%2))):$(printf '%x\n' $(($RANDOM*2+$RANDOM%2)))])
-			n=$[$n+1]
-		fi
-	done
-}
+template='$Endip_v4_ip'
 
-freeCloudflareAccount(){
-	output=$(curl -sL "https://api.zeroteam.top/warp?format=sing-box" | grep -Eo --color=never '"2606:4700:[0-9a-f:]+/128"|"private_key":"[0-9a-zA-Z\/+]+="|"reserved":\[[0-9]+(,[0-9]+){2}\]')
-	publicKey=$(echo "$output" | grep -oP '("2606:4700:[0-9a-f:]+/128")' | tr -d '"')
-	privateKey=$(echo "$output" | grep -oP '("private_key":"[0-9a-zA-Z\/+]+=")' | cut -d':' -f2 | tr -d '"')
-	reserved=$(echo "$output" | grep -oP '(\[[0-9]+(,[0-9]+){2}\])' | tr -d '"' | sed 's/"reserved"://')
-}
-
-freeCloudflareAccount2(){
-	output=$(curl -sL "https://api.zeroteam.top/warp?format=sing-box" | grep -Eo --color=never '"2606:4700:[0-9a-f:]+/128"|"private_key":"[0-9a-zA-Z\/+]+="|"reserved":\[[0-9]+(,[0-9]+){2}\]')
-	publicKey2=$(echo "$output" | grep -oP '("2606:4700:[0-9a-f:]+/128")' | tr -d '"')
-	privateKey2=$(echo "$output" | grep -oP '("private_key":"[0-9a-zA-Z\/+]+=")' | cut -d':' -f2 | tr -d '"')
-	reserved2=$(echo "$output" | grep -oP '(\[[0-9]+(,[0-9]+){2}\])' | tr -d '"' | sed 's/"reserved"://')
-}
-
-endipresult() {
-    echo ${temp[@]} | sed -e 's/ /\n/g' | sort -u > ip.txt
-    ulimit -n 102400
-    chmod +x warpendpoint >/dev/null 2>&1
-    if command -v warpendpoint &>/dev/null; then
-        warpendpoint
-   else
-        ./warpendpoint
-    fi
-    
-    clear
-
-    Endip_v4=$(cat result.csv | grep -oE "[0-9]+\.[0-9]+\.[0-9]+\.[0-9]+:[0-9]+" | head -n 1)
-	Endip_v4_ip="${Endip_v4%:*}"
-	Endip_v4_port="${Endip_v4##*:}"
-    
-	freeCloudflareAccount
-	freeCloudflareAccount2
-
-template='{"outbounds":[{"type":"wireguard","tag":"Warp-IR","server":"'$Endip_v4_ip'","server_port":'$Endip_v4_port',"local_address":["172.16.0.2/32","'$publicKey'"],"private_key":"'$privateKey'","peer_public_key":"bmXOC+F1FxEMF9dyiK2H5/1SUtzH0JuVo51h2wPfgyo=","reserved":'$reserved',"mtu":1280,"fake_packets":"5-10"},{"type":"wireguard","tag":"Warp-EU","detour":"Warp-IR","server":"'$Endip_v4_ip'","server_port":'$Endip_v4_port',"local_address":["172.16.0.2/32","'$publicKey2'"],"private_key":"'$privateKey2'","peer_public_key":"bmXOC+F1FxEMF9dyiK2H5/1SUtzH0JuVo51h2wPfgyo=","reserved":'$reserved2',"mtu":1280,"fake_packets":"5-10"}]}
-
-
-
-'
 	# echo "$template"
  	# Print the template in green
   	echo -e "${green}$template${rest}"

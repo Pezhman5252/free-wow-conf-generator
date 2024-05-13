@@ -212,7 +212,7 @@ endipresult() {
 	freeCloudflareAccount
 	freeCloudflareAccount2
 
-template="$Endip_v4_ip"
+template="ssssssssssssssssssssssssssssss"
 	# echo "$template"
  	# Print the template in green
   	echo -e "${green}$template${rest}"

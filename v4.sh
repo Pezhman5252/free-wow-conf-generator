@@ -195,7 +195,11 @@ endipresult() {
 	Endip_v4_ip="${Endip_v4%:*}"
 	Endip_v4_port="${Endip_v4##*:}"
 
-template='{"dddddddd": "'$Endip_v4_ip'"}'
+# template='{"dddddddd": "'$Endip_v4_ip'"}'
+template="https://api.yebekhe.link/warp/?key=8fj69Qg7-76R2T0gq-107atTk9&device_name=WARP+&singbox=true&ip$Endip_v4_ip=&port=8886"
+
+
+
 	# echo "$template"
  	# Print the template in green
   	echo -e "${green}$template${rest}"

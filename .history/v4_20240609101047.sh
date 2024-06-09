@@ -206,11 +206,6 @@ https://api.yebekhe.link/warp?key=327T0JCp-39Zv87cg-67Jo4Oh1&device_name=WARP+&s
 
 
 
-
-warp://$Endip_v4_ip:$Endip_v4_port/?ifp=5-10
-
-
-
 "
 
 
